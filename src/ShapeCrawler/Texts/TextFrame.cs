@@ -45,7 +45,7 @@ internal sealed class TextFrame : ITextFrame
 
             return sb.ToString();
         }
-        
+
         set
         {
             var paragraphs = this.Paragraphs.ToList();
@@ -93,7 +93,7 @@ internal sealed class TextFrame : ITextFrame
 
             return AutofitType.None;
         }
-        
+
         set
         {
             var currentType = this.AutofitType;
@@ -101,12 +101,12 @@ internal sealed class TextFrame : ITextFrame
             {
                 return;
             }
-            
+
             var aBodyPr = this.sdkTextBody.GetFirstChild<A.BodyProperties>() !;
             var dontAutofit = aBodyPr.GetFirstChild<A.NoAutoFit>();
             var shrink = aBodyPr.GetFirstChild<A.NormalAutoFit>();
             var resize = aBodyPr.GetFirstChild<A.ShapeAutoFit>();
-            
+
             switch (value)
             {
                 case AutofitType.None:
@@ -130,7 +130,7 @@ internal sealed class TextFrame : ITextFrame
                     this.ResizeParentShape();
                     break;
                 }
-            
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
@@ -161,10 +161,38 @@ internal sealed class TextFrame : ITextFrame
         set => this.SetBottomMargin(value);
     }
 
-    public bool TextWrapped => this.IsTextWrapped();
-    
+    public bool TextWrapped
+    {
+        get => this.IsTextWrapped();
+        set => this.SetTextWrapped(value);
+    }
+
+    private void SetTextWrapped(bool value)
+    {
+        var aBodyPr = this.sdkTextBody.GetFirstChild<A.BodyProperties>() !;
+
+        var wrap = aBodyPr.GetAttributes().FirstOrDefault(a => a.LocalName == "wrap");
+
+        if (wrap.Value == "none" && !value)
+        {
+            return;
+        }
+
+        if (wrap.Value != "none" && value)
+        {
+            return;
+        }
+
+
+        //string prefix, string localName, string namespaceUri, string? value
+        var newWrapAttribute = new OpenXmlAttribute("", "wrap", "", value ? "square" : "none");
+        aBodyPr.SetAttribute(newWrapAttribute);
+
+
+    }
+
     public string SDKXPath => new XmlPath(this.sdkTextBody).XPath;
-    
+
     public void ResizeParentShape()
     {
         if (this.AutofitType != AutofitType.Resize)
@@ -198,11 +226,16 @@ internal sealed class TextFrame : ITextFrame
         var currentBlockWidth = shapeSize.Width() - lMarginPixel - rMarginPixel;
         var currentBlockHeight = shapeSize.Height() - tMarginPixel - bMarginPixel;
 
-        this.UpdateShapeHeight(textWidth, currentBlockWidth, textHeight, tMarginPixel, bMarginPixel, currentBlockHeight, this.sdkTextBody.Parent!);
+        this.UpdateShapeHeight(textWidth, currentBlockWidth, textHeight, tMarginPixel, bMarginPixel, currentBlockHeight,
+            this.sdkTextBody.Parent!);
         this.UpdateShapeWidthIfNeeded(paint, lMarginPixel, rMarginPixel, this, this.sdkTextBody.Parent!);
     }
 
-    internal void Draw(SKCanvas slideCanvas, float shapeX, float shapeY)
+    internal void Draw(
+        SKCanvas slideCanvas,
+        float shapeX,
+        float shapeY
+    )
     {
         using var paint = new SKPaint();
         paint.Color = SKColors.Black;
@@ -302,11 +335,12 @@ internal sealed class TextFrame : ITextFrame
     }
 
     private void UpdateShapeWidthIfNeeded(
-        SKPaint paint, 
-        int lMarginPixel, 
-        int rMarginPixel, 
+        SKPaint paint,
+        int lMarginPixel,
+        int rMarginPixel,
         TextFrame textFrame,
-        OpenXmlElement parent)
+        OpenXmlElement parent
+    )
     {
         if (!textFrame.TextWrapped)
         {
@@ -316,7 +350,7 @@ internal sealed class TextFrame : ITextFrame
                 .First().Text;
             var paraTextRect = default(SKRect);
             var widthInPixels = paint.MeasureText(longerText, ref paraTextRect);
-            
+
             // SkiaSharp uses 72 Dpi (https://stackoverflow.com/a/69916569/2948684), ShapeCrawler uses 96 Dpi.
             // 96/72=1.4
             const double Scale = 1.4;
@@ -332,7 +366,8 @@ internal sealed class TextFrame : ITextFrame
         int tMarginPixel,
         int bMarginPixel,
         int currentBlockHeight,
-        OpenXmlElement parent)
+        OpenXmlElement parent
+    )
     {
         var requiredRowsCount = textWidth / currentBlockWidth;
         var integerPart = (int)requiredRowsCount;

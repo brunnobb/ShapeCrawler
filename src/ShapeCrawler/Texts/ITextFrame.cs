@@ -44,7 +44,7 @@ public interface ITextFrame
     /// <summary>
     ///     Gets a value indicating whether text is wrapped in shape.
     /// </summary>
-    bool TextWrapped { get; }
+    bool TextWrapped { get; set; }
     
     /// <summary>
     ///     Gets XPath.
