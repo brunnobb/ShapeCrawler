@@ -169,29 +169,7 @@ internal sealed class TextFrame : ITextFrame
 
     public string SDKXPath => new XmlPath(this.sdkTextBody).XPath;
 
-    private void SetTextWrapped(bool value)
-    {
-        var aBodyPr = this.sdkTextBody.GetFirstChild<A.BodyProperties>() !;
-
-        var wrap = aBodyPr.GetAttributes().FirstOrDefault(a => a.LocalName == "wrap");
-
-        if (wrap.Value == "none" && !value)
-        {
-            return;
-        }
-
-        if (wrap.Value != "none" && value)
-        {
-            return;
-        }
-
-
-        // string prefix, string localName, string namespaceUri, string? value
-
-        var newWrapAttribute = new OpenXmlAttribute(String.Empty, "wrap", String.Empty, value ? "square" : "none");
-        aBodyPr.SetAttribute(newWrapAttribute);
-
-    }
+    
 
   
 
@@ -232,11 +210,12 @@ internal sealed class TextFrame : ITextFrame
         this.UpdateShapeWidthIfNeeded(paint, lMarginPixel, rMarginPixel, this, this.sdkTextBody.Parent!);
     }
 
+    
+
     internal void Draw(
         SKCanvas slideCanvas,
         float shapeX,
-        float shapeY
-     )
+        float shapeY)
     {
         using var paint = new SKPaint();
         paint.Color = SKColors.Black;
@@ -250,6 +229,29 @@ internal sealed class TextFrame : ITextFrame
         float x = shapeX + leftMarginPx;
         float y = shapeY + topMarginPx + fontHeightPx;
         slideCanvas.DrawText(this.Text, x, y, paint);
+    }
+
+    private void SetTextWrapped(bool value)
+    {
+        var aBodyPr = this.sdkTextBody.GetFirstChild<A.BodyProperties>() !;
+
+        var wrap = aBodyPr.GetAttributes().FirstOrDefault(a => a.LocalName == "wrap");
+
+        if (wrap.Value == "none" && !value)
+        {
+            return;
+        }
+
+        if (wrap.Value != "none" && value)
+        {
+            return;
+        }
+
+
+        // string prefix, string localName, string namespaceUri, string? value
+        var newWrapAttribute = new OpenXmlAttribute(String.Empty, "wrap", String.Empty, value ? "square" : "none");
+        aBodyPr.SetAttribute(newWrapAttribute);
+
     }
 
     private double GetLeftMargin()
@@ -340,8 +342,7 @@ internal sealed class TextFrame : ITextFrame
         int lMarginPixel,
         int rMarginPixel,
         TextFrame textFrame,
-        OpenXmlElement parent
-     )
+        OpenXmlElement parent)
     {
         if (!textFrame.TextWrapped)
         {
@@ -367,8 +368,7 @@ internal sealed class TextFrame : ITextFrame
         int tMarginPixel,
         int bMarginPixel,
         int currentBlockHeight,
-        OpenXmlElement parent
-     )
+        OpenXmlElement parent)
     {
         var requiredRowsCount = textWidth / currentBlockWidth;
         var integerPart = (int)requiredRowsCount;
