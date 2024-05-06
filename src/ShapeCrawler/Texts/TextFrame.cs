@@ -167,6 +167,8 @@ internal sealed class TextFrame : ITextFrame
         set => this.SetTextWrapped(value);
     }
 
+    public string SDKXPath => new XmlPath(this.sdkTextBody).XPath;
+
     private void SetTextWrapped(bool value)
     {
         var aBodyPr = this.sdkTextBody.GetFirstChild<A.BodyProperties>() !;
@@ -184,14 +186,14 @@ internal sealed class TextFrame : ITextFrame
         }
 
 
-        //string prefix, string localName, string namespaceUri, string? value
-        var newWrapAttribute = new OpenXmlAttribute("", "wrap", "", value ? "square" : "none");
-        aBodyPr.SetAttribute(newWrapAttribute);
+        // string prefix, string localName, string namespaceUri, string? value
 
+        var newWrapAttribute = new OpenXmlAttribute(String.Empty, "wrap", String.Empty, value ? "square" : "none");
+        aBodyPr.SetAttribute(newWrapAttribute);
 
     }
 
-    public string SDKXPath => new XmlPath(this.sdkTextBody).XPath;
+  
 
     public void ResizeParentShape()
     {
@@ -226,8 +228,7 @@ internal sealed class TextFrame : ITextFrame
         var currentBlockWidth = shapeSize.Width() - lMarginPixel - rMarginPixel;
         var currentBlockHeight = shapeSize.Height() - tMarginPixel - bMarginPixel;
 
-        this.UpdateShapeHeight(textWidth, currentBlockWidth, textHeight, tMarginPixel, bMarginPixel, currentBlockHeight,
-            this.sdkTextBody.Parent!);
+        this.UpdateShapeHeight(textWidth, currentBlockWidth, textHeight, tMarginPixel, bMarginPixel, currentBlockHeight, this.sdkTextBody.Parent!);
         this.UpdateShapeWidthIfNeeded(paint, lMarginPixel, rMarginPixel, this, this.sdkTextBody.Parent!);
     }
 
@@ -235,7 +236,7 @@ internal sealed class TextFrame : ITextFrame
         SKCanvas slideCanvas,
         float shapeX,
         float shapeY
-    )
+     )
     {
         using var paint = new SKPaint();
         paint.Color = SKColors.Black;
@@ -340,7 +341,7 @@ internal sealed class TextFrame : ITextFrame
         int rMarginPixel,
         TextFrame textFrame,
         OpenXmlElement parent
-    )
+     )
     {
         if (!textFrame.TextWrapped)
         {
@@ -367,7 +368,7 @@ internal sealed class TextFrame : ITextFrame
         int bMarginPixel,
         int currentBlockHeight,
         OpenXmlElement parent
-    )
+     )
     {
         var requiredRowsCount = textWidth / currentBlockWidth;
         var integerPart = (int)requiredRowsCount;

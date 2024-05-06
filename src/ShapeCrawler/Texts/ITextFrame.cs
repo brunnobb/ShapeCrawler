@@ -42,7 +42,7 @@ public interface ITextFrame
     double BottomMargin { get; set; }
 
     /// <summary>
-    ///     Gets a value indicating whether text is wrapped in shape.
+    ///     Gets or sets a value indicating whether text is wrapped in shape.
     /// </summary>
     bool TextWrapped { get; set; }
     
