@@ -361,7 +361,7 @@ internal sealed class SlideShapes : ISlideShapes
         aXfrm.VerticalFlip = new BooleanValue(flipV);
     }
 
-    public void AddTable(int x, int y, int columnsCount, int rowsCount)
+    public void AddTable(int x, int y, int columnsCount, int rowsCount, bool headerRow = true)
     {
         var shapeName = this.GenerateNextTableName();
         var xEmu = UnitConverter.HorizontalPixelToEmu(x);
@@ -386,7 +386,7 @@ internal sealed class SlideShapes : ISlideShapes
             { Uri = "http://schemas.openxmlformats.org/drawingml/2006/table" };
         var aTable = new A.Table();
 
-        var tableProperties = new A.TableProperties { FirstRow = true, BandRow = true };
+        var tableProperties = new A.TableProperties { FirstRow = headerRow, BandRow = true };
         var tableStyleId = new A.TableStyleId
             { Text = "{5C22544A-7EE6-4342-B048-85BDC9FD1C3A}" };
         tableProperties.Append(tableStyleId);
