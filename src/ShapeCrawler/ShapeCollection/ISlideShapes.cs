@@ -60,9 +60,7 @@ public interface ISlideShapes : IShapes
     /// <summary>
     ///     Adds a new table.
     /// </summary>
-    void AddTable(int x, int y, int columnsCount, int rowsCount,
-        bool headerRow = true
-    );
+    void AddTable(int x, int y, int columnsCount, int rowsCount, bool headerRow = true);
 
     /// <summary>
     ///     Removes specified shape.
