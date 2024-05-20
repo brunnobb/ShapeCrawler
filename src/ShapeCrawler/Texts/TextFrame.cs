@@ -254,7 +254,7 @@ internal sealed class TextFrame : ITextFrame
 
     }
 
-    private double GetLeftMargin()
+    private decimal GetLeftMargin()
     {
         var bodyProperties = this.sdkTextBody.GetFirstChild<A.BodyProperties>() !;
         var ins = bodyProperties.LeftInset;
