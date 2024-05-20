@@ -89,7 +89,7 @@ Pull Requests are welcome! Please read the [Contribution Guide](https://github.c
 
 ## Changelog  
 
-### Version 0.50.3 - 2024-03-06
-🐞Fixed `IShape.AsTable()`
+### Version 0.51.0 - 2024-05-11
+🍀Added `IShapeFill.SetNoFill()` to remove shape filling [#667](https://github.com/ShapeCrawler/ShapeCrawler/issues/667)
 
 Visit [CHANGELOG.md](https://github.com/ShapeCrawler/ShapeCrawler/blob/master/CHANGELOG.md) to see the full log.
