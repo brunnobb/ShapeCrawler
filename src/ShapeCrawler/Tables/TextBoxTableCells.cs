@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using DocumentFormat.OpenXml;
@@ -140,7 +140,11 @@ internal sealed record TextBoxTableCells : ITextBox
 
     public AutofitType AutofitType { get => AutofitType.None; set => throw new NotSupportedException(); }
 
-    public bool TextWrapped => true;
+     public bool TextWrapped
+    {
+        get => true;
+        set => throw new Exception("Unsuported");
+    }
 
     public string SdkXPath => new XmlPath(this.tableCell.TextBody!).XPath;
 

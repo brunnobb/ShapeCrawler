@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using DocumentFormat.OpenXml;
@@ -46,7 +46,26 @@ internal sealed record TextBox : ITextBox
             return sb.ToString();
         }
 
-        set => this.SetText(value);
+        set
+        {
+            var paragraphs = this.Paragraphs.ToList();
+            var paragraphWithPortion = paragraphs.FirstOrDefault(p => p.Portions.Any());
+            if (paragraphWithPortion == null)
+            {
+                paragraphWithPortion = paragraphs.First();
+                paragraphWithPortion.Portions.AddText(value);
+            }
+            else
+            {
+                var removingParagraphs = paragraphs.Where(p => p != paragraphWithPortion);
+                foreach (var removingParagraph in removingParagraphs)
+                {
+                    removingParagraph.Remove();
+                }
+
+            }
+        }
+        //set => this.SetText(value);
     }
     
     public AutofitType AutofitType
@@ -135,9 +154,14 @@ internal sealed record TextBox : ITextBox
         set => this.SetBottomMargin(value);
     }
 
-    public bool TextWrapped => this.IsTextWrapped();
+    public bool TextWrapped
+    {
+        get => this.IsTextWrapped();
+        set => this.SetTextWrapped(value);
+    }
 
     public string SdkXPath => new XmlPath(this.sdkTextBody).XPath;
+
 
     public TextVerticalAlignment VerticalAlignment
     {
@@ -265,6 +289,49 @@ internal sealed record TextBox : ITextBox
 
         this.UpdateShapeHeight(requiredHeight, tMarginPixel, bMarginPixel, currentBlockHeight, this.sdkTextBody.Parent!);
         this.UpdateShapeWidthIfNeeded(lMarginPixel, rMarginPixel, this, this.sdkTextBody.Parent!);
+    }
+    
+
+    //internal void Draw(
+    //    SKCanvas slideCanvas,
+    //    float shapeX,
+    //    float shapeY)
+    //{
+    //    using var paint = new SKPaint();
+    //    paint.Color = SKColors.Black;
+    //    var firstPortion = this.Paragraphs.First().Portions.First();
+    //    paint.TextSize = firstPortion.Font.Size;
+    //    var typeFace = SKTypeface.FromFamilyName(firstPortion.Font.LatinName);
+    //    paint.Typeface = typeFace;
+    //    float leftMarginPx = (float)UnitConverter.CentimeterToPixel(this.LeftMargin);
+    //    float topMarginPx = (float)UnitConverter.CentimeterToPixel(this.TopMargin);
+    //    float fontHeightPx = (float)UnitConverter.PointToPixel(16);
+    //    float x = shapeX + leftMarginPx;
+    //    float y = shapeY + topMarginPx + fontHeightPx;
+    //    slideCanvas.DrawText(this.Text, x, y, paint);
+    //}
+
+    private void SetTextWrapped(bool value)
+    {
+        var aBodyPr = this.sdkTextBody.GetFirstChild<A.BodyProperties>() !;
+
+        var wrap = aBodyPr.GetAttributes().FirstOrDefault(a => a.LocalName == "wrap");
+
+        if (wrap.Value == "none" && !value)
+        {
+            return;
+        }
+
+        if (wrap.Value != "none" && value)
+        {
+            return;
+        }
+
+
+        // string prefix, string localName, string namespaceUri, string? value
+        var newWrapAttribute = new OpenXmlAttribute(String.Empty, "wrap", String.Empty, value ? "square" : "none");
+        aBodyPr.SetAttribute(newWrapAttribute);
+
     }
 
     private decimal GetLeftMargin()

@@ -1,4 +1,4 @@
-﻿// ReSharper disable CheckNamespace
+// ReSharper disable CheckNamespace
 #pragma warning disable IDE0130
 namespace ShapeCrawler;
 #pragma warning restore IDE0130
@@ -49,10 +49,10 @@ public interface ITextBox
     decimal BottomMargin { get; set; }
 
     /// <summary>
-    ///     Gets a value indicating whether the text is wrapped in the shape.
+    ///     Gets or sets a value indicating whether text is wrapped in shape.
     /// </summary>
-    bool TextWrapped { get; }
-
+    bool TextWrapped { get; set; }
+    
     /// <summary>
     ///     Gets XPath.
     /// </summary>
