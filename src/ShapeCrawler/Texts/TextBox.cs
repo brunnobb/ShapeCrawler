@@ -290,9 +290,8 @@ internal sealed record TextBox : ITextBox
 
 
         // string prefix, string localName, string namespaceUri, string? value
-        var newWrapAttribute = new OpenXmlAttribute(String.Empty, "wrap", String.Empty, value ? "square" : "none");
+        var newWrapAttribute = new OpenXmlAttribute(string.Empty, "wrap", string.Empty, value ? "square" : "none");
         aBodyPr.SetAttribute(newWrapAttribute);
-
     }
 
     private decimal GetLeftMargin()
