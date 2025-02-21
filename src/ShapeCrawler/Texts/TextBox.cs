@@ -46,26 +46,7 @@ internal sealed record TextBox : ITextBox
             return sb.ToString();
         }
 
-        set
-        {
-            var paragraphs = this.Paragraphs.ToList();
-            var paragraphWithPortion = paragraphs.FirstOrDefault(p => p.Portions.Any());
-            if (paragraphWithPortion == null)
-            {
-                paragraphWithPortion = paragraphs.First();
-                paragraphWithPortion.Portions.AddText(value);
-            }
-            else
-            {
-                var removingParagraphs = paragraphs.Where(p => p != paragraphWithPortion);
-                foreach (var removingParagraph in removingParagraphs)
-                {
-                    removingParagraph.Remove();
-                }
-
-            }
-        }
-        //set => this.SetText(value);
+        set => this.SetText(value);
     }
     
     public AutofitType AutofitType
