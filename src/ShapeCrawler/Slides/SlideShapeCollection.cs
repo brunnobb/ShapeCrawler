@@ -419,15 +419,13 @@ internal sealed class SlideShapeCollection : ISlideShapeCollection
         aXfrm.HorizontalFlip = new BooleanValue(flipH);
         aXfrm.VerticalFlip = new BooleanValue(flipV);
     }
-
-    public void AddTable(int x, int y, int columnsCount, int rowsCount) =>
-        this.AddTable(x, y, columnsCount, rowsCount, TableStyle.MediumStyle2Accent1, true);
-
-     public void AddTable(int x, int y, int columnsCount, int rowsCount, ITableStyle style) =>
+        
+    public void AddTable(int x, int y, int columnsCount, int rowsCount, ITableStyle style) =>
         this.AddTable(x, y, columnsCount, rowsCount, style, true);
 
     public void AddTable(int x, int y, int columnsCount, int rowsCount,  bool headerRow) =>
         this.AddTable(x, y, columnsCount, rowsCount, TableStyle.MediumStyle2Accent1, headerRow);
+
     public void AddTable(int x, int y, int columnsCount, int rowsCount, ITableStyle style, bool headerRow)
     {
         var shapeName = this.GenerateNextTableName();

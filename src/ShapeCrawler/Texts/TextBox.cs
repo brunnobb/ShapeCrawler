@@ -270,27 +270,7 @@ internal sealed record TextBox : ITextBox
 
         this.UpdateShapeHeight(requiredHeight, tMarginPixel, bMarginPixel, currentBlockHeight, this.sdkTextBody.Parent!);
         this.UpdateShapeWidthIfNeeded(lMarginPixel, rMarginPixel, this, this.sdkTextBody.Parent!);
-    }
-    
-
-    //internal void Draw(
-    //    SKCanvas slideCanvas,
-    //    float shapeX,
-    //    float shapeY)
-    //{
-    //    using var paint = new SKPaint();
-    //    paint.Color = SKColors.Black;
-    //    var firstPortion = this.Paragraphs.First().Portions.First();
-    //    paint.TextSize = firstPortion.Font.Size;
-    //    var typeFace = SKTypeface.FromFamilyName(firstPortion.Font.LatinName);
-    //    paint.Typeface = typeFace;
-    //    float leftMarginPx = (float)UnitConverter.CentimeterToPixel(this.LeftMargin);
-    //    float topMarginPx = (float)UnitConverter.CentimeterToPixel(this.TopMargin);
-    //    float fontHeightPx = (float)UnitConverter.PointToPixel(16);
-    //    float x = shapeX + leftMarginPx;
-    //    float y = shapeY + topMarginPx + fontHeightPx;
-    //    slideCanvas.DrawText(this.Text, x, y, paint);
-    //}
+    }    
 
     private void SetTextWrapped(bool value)
     {

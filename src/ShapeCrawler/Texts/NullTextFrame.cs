@@ -51,11 +51,10 @@ internal readonly struct NullTextFrame : ITextBox
         get => throw new Exception(Error);
         set => throw new Exception(Error);
     }
+
     public bool TextWrapped
     {
         get => throw new Exception(Error);
         set => throw new Exception(Error);
-    }
-    
-    
+    }    
 }
