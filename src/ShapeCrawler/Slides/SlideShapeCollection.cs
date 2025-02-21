@@ -125,7 +125,7 @@ internal sealed class SlideShapeCollection : ISlideShapeCollection
         { Id = string.Empty, Action = "ppaction://media" };
         nonVisualDrawingProps.Append(hyperlinkOnClick);
         nonVisualPictureProps.Append(new P.NonVisualPictureDrawingProperties());
-
+         
         var applicationNonVisualDrawingProps = nonVisualPictureProps.ApplicationNonVisualDrawingProperties!;
         applicationNonVisualDrawingProps.Append(audioFromFile);
         applicationNonVisualDrawingProps.Append(appNonVisualDrawingPropsExtensionList);
@@ -421,9 +421,14 @@ internal sealed class SlideShapeCollection : ISlideShapeCollection
     }
 
     public void AddTable(int x, int y, int columnsCount, int rowsCount) =>
-        this.AddTable(x, y, columnsCount, rowsCount, TableStyle.MediumStyle2Accent1);
+        this.AddTable(x, y, columnsCount, rowsCount, TableStyle.MediumStyle2Accent1, true);
 
-    public void AddTable(int x, int y, int columnsCount, int rowsCount, ITableStyle style)
+     public void AddTable(int x, int y, int columnsCount, int rowsCount, ITableStyle style) =>
+        this.AddTable(x, y, columnsCount, rowsCount, style, true);
+
+    public void AddTable(int x, int y, int columnsCount, int rowsCount,  bool headerRow) =>
+        this.AddTable(x, y, columnsCount, rowsCount, TableStyle.MediumStyle2Accent1, headerRow);
+    public void AddTable(int x, int y, int columnsCount, int rowsCount, ITableStyle style, bool headerRow)
     {
         var shapeName = this.GenerateNextTableName();
         var xEmu = UnitConverter.HorizontalPixelToEmu(x);
@@ -449,7 +454,7 @@ internal sealed class SlideShapeCollection : ISlideShapeCollection
         { Uri = "http://schemas.openxmlformats.org/drawingml/2006/table" };
         var aTable = new A.Table();
 
-        var tableProperties = new A.TableProperties { FirstRow = true, BandRow = true };
+        var tableProperties = new A.TableProperties { FirstRow = headerRow, BandRow = true };
         var tableStyleId = new A.TableStyleId
         { Text = ((TableStyle)style).Guid };
         tableProperties.Append(tableStyleId);
