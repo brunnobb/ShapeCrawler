@@ -43,7 +43,7 @@ This library provides a simplified object model on top of the Open XML SDK for m
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DocumentationFile>bin\Release\ShapeCrawler.xml</DocumentationFile>
-    <TargetFrameworks>net9.0;netstandard2.0</TargetFrameworks>
+	<TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
