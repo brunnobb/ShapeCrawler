@@ -154,7 +154,6 @@ internal sealed class SlideShapeCollection : ISlideShapeCollection
 
             if (autoReduce)
             {
-
                 if (height > 500)
                 {
                     height = 500;
