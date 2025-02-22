@@ -131,7 +131,7 @@ internal sealed class SlideShapeCollection : ISlideShapeCollection
         applicationNonVisualDrawingProps.Append(appNonVisualDrawingPropsExtensionList);
     }
 
-    public void AddPicture(Stream image)
+    public void AddPicture(Stream image, bool autoReduce = true)
     {
         image.Position = 0;
         try
@@ -152,22 +152,27 @@ internal sealed class SlideShapeCollection : ISlideShapeCollection
             var width = imageMagick.Width;
             var height = imageMagick.Height;
 
-            if (height > 500)
+            if (autoReduce)
             {
-                height = 500;
-                width = (uint)(height * imageMagick.Width / (decimal)imageMagick.Height);
+
+                if (height > 500)
+                {
+                    height = 500;
+                    width = (uint)(height * imageMagick.Width / (decimal)imageMagick.Height);
+                }
+
+                if (width > 500)
+                {
+                    width = 500;
+                    height = (uint)(width * imageMagick.Height / (decimal)imageMagick.Width);
+                }
+
+                if (width == 500 || height == 500)
+                {
+                    imageMagick.Resize(width, height);
+                }
             }
 
-            if (width > 500)
-            {
-                width = 500;
-                height = (uint)(width * imageMagick.Height / (decimal)imageMagick.Width);
-            }
-
-            if (width == 500 || height == 500)
-            {
-                imageMagick.Resize(width, height);
-            }
 
             imageMagick.Settings.SetDefines(
                 new PngWriteDefines
